@@ -76,12 +76,12 @@ const handleLogin = async () => {
     });
 
     if (user.isSignedIn) {
-      const { username, userId, signInDetails } = await getCurrentUser();
+      const { userId } = await getCurrentUser();
       const { tokens } = await fetchAuthSession();
-      authStore.login(tokens.idToken?.toString(), userId, signInDetails);
+      authStore.login(tokens.idToken?.toString(), userId);
       router.push("/dashboard");
     } else {
-      router.push("/login");
+      router.push("/auth");
     }
   } catch (error) {
     console.error("Login error:", error);
