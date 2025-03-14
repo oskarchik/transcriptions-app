@@ -22,4 +22,5 @@ export default defineNuxtConfig({
   },
   plugins: [{ src: "./src/plugins/amplify.ts", ssr: false }],
   components: ["~/components", "~/components/custom"],
+  ssr: false,
 });
