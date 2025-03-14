@@ -1,5 +1,6 @@
 <template>
   <div>
-    <Button>Click me</Button>
+    <NuxtRouteAnnouncer />
+    <NuxtPage />
   </div>
 </template>
