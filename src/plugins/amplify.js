@@ -1,8 +1,8 @@
 import { Amplify } from "aws-amplify";
-import aws from "../aws/aws-exports";
+import awsmobile from "../aws/aws-exports";
 
 export default defineNuxtPlugin((nuxtApp) => {
-  Amplify.configure(aws);
+  Amplify.configure(awsmobile);
 
   nuxtApp.provide("Amplify", Amplify);
 });
