@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
-  modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt"],
+  modules: ["@nuxtjs/tailwindcss", "shadcn-nuxt", "@pinia/nuxt"],
   srcDir: "src",
   shadcn: {
     /**
@@ -20,4 +20,6 @@ export default defineNuxtConfig({
       baseApiUrl: process.env.NUXT_BASE_API_URL,
     },
   },
+  plugins: [{ src: "./src/plugins/amplify.ts", ssr: false }],
+  components: ["~/components", "~/components/custom"],
 });
