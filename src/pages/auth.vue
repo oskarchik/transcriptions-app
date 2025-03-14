@@ -27,8 +27,6 @@
 
 <script setup>
 import { ref } from "vue";
-import RegisterForm from "@/components/custom/registerForm.vue";
-import LoginForm from "@/components/custom/loginForm.vue";
 
 const isRegistering = ref(false);
 
