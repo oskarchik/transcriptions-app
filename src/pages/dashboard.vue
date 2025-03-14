@@ -6,6 +6,7 @@
         <LogOutIcon class="h-5 w-5" />
       </Button>
     </div>
+
     <div class="flex justify-center items-center mt-6 gap-6">
       <Button
         @click="previousPage"
@@ -28,6 +29,21 @@
         <span>Next</span>
         <ChevronRightIcon class="h-5 w-5" />
       </Button>
+    </div>
+
+    <!-- Botón para subir archivo -->
+    <div class="mb-4 flex items-center gap-4">
+      <Input
+        ref="fileInput"
+        type="file"
+        class="hidden"
+        @change="handleFileChange"
+        accept=".mp3,.wav"
+      />
+      <Button @click="triggerFileInput">Upload File</Button>
+      <span v-if="selectedFile" class="text-gray-600">
+        {{ selectedFile.name }}
+      </span>
     </div>
 
     <!-- Tabs para diferentes vistas -->
@@ -92,6 +108,15 @@
                 >
                   <DownloadIcon class="h-4 w-4" />
                 </Button>
+                <!-- <Button
+                  variant="outline"
+                  size="icon"
+                  class="text-destructive hover:text-destructive"
+                  disabled
+                  alt="comming soon"
+                >
+                  <TrashIcon class="h-4 w-4" />
+                </Button> -->
               </div>
             </TableCell>
           </TableRow>
@@ -102,11 +127,13 @@
 </template>
 
 <script lang="ts" setup>
+definePageMeta({
+  middleware: ["auth"], // Ruta protegida
+});
 const config = useRuntimeConfig();
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useAuth } from "@/stores/auth";
-
 import {
   formatDate,
   getLanguageName,
@@ -136,7 +163,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -154,6 +180,12 @@ interface FileItem {
 const authStore = useAuth();
 const router = useRouter();
 const files = ref<FileItem[]>([]);
+const pagination = ref({
+  currentPage: 0,
+  totalPages: 0,
+  lastEvaluatedKey: null,
+  isLoading: false,
+});
 
 const selectedFile = ref(null);
 const allowedExtensions = [".mp3", ".wav"];
@@ -169,18 +201,87 @@ const isLoading = ref(false);
 const fileInput = ref(null);
 const userId = ref(authStore.userId);
 
+const BASE_API_URL = config.public.baseApiUrl;
+
 const triggerFileInput = () => {
   if (fileInput.value?.$el) {
     fileInput.value.$el.click();
   }
 };
 
-const BASE_API_URL = config.public.baseApiUrl;
-console.log("🚀 ~ BASE_API_URL:", BASE_API_URL);
+const handleFileChange = (event: Event) => {
+  const file = (event.target as HTMLInputElement).files?.[0];
+  if (file) {
+    if (
+      file.size > maxFileSize ||
+      !allowedExtensions.some((ext) => file.name.endsWith(ext))
+    ) {
+      showAlert(
+        "Invalid file. Please upload a valid .mp3 or .wav file under 20MB."
+      );
+      return;
+    }
+    selectedFile.value = file;
+    handleFileUpload(file);
+  }
+};
+
+const handleFileUpload = async () => {
+  if (!selectedFile.value) {
+    return;
+  }
+  const user = localStorage.getItem("userId");
+  const token = localStorage.getItem("authToken");
+
+  const file = selectedFile.value;
+
+  const fileName = file.name;
+  const size = file.size / 1024 / 1024;
+
+  const [originalFilename, fileExtension] = fileName.split(".");
+
+  const url = `${BASE_API_URL}/audio/upload-url?userId=${user}&filename=${fileName}&size=${size}`;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) throw new Error("Failed to get upload URL");
+
+    const resBody = await response.json();
+    const { signedUrl } = resBody;
+
+    const uploadResponse = await fetch(signedUrl, {
+      method: "PUT",
+      body: file,
+      headers: {
+        "Content-Type": file.type,
+      },
+    });
+
+    if (!uploadResponse.ok) throw new Error("Failed to upload file");
+
+    alert("File upload process successfully started!");
+
+    selectedFile.value = null;
+    fileInput.value.value = null;
+
+    // Actualizar lista de archivos
+    fetchFiles();
+  } catch (error) {
+    console.error("Upload error:", error);
+    alert("File upload failed.");
+  }
+};
 
 const fetchFiles = async (reset = false, key = null) => {
   if (isLoading.value) return;
   isLoading.value = true;
+  const userId = localStorage.getItem("userId");
 
   let url = `${BASE_API_URL}/transcriptions`;
 
@@ -194,6 +295,7 @@ const fetchFiles = async (reset = false, key = null) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
     },
   };
   try {
@@ -219,6 +321,41 @@ const fetchFiles = async (reset = false, key = null) => {
     console.error("Error fetching files:", error);
   } finally {
     isLoading.value = false;
+  }
+};
+
+const handleFileDownload = async (fileId: string, user: string) => {
+  const url = `${BASE_API_URL}download-url?fileId=${fileId}&userId=${user}`;
+
+  const config = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    },
+  };
+
+  try {
+    const response = await fetch(url, config);
+
+    if (!response.ok) throw new Error("Failed to get download URL");
+
+    const resBody = await response.json();
+    const { signedUrl } = resBody;
+
+    if (signedUrl) {
+      const link = document.createElement("a");
+      link.href = signedUrl;
+      link.setAttribute("download", "");
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      throw new Error("signedUrl is undefined or invalid");
+    }
+  } catch (error) {
+    console.log("🚀 ~ handleFileDownload ~ error:", error);
   }
 };
 
