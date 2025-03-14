@@ -20,7 +20,7 @@ export default defineNuxtConfig({
       baseApiUrl: process.env.NUXT_BASE_API_URL,
     },
   },
-  plugins: [{ src: "./src/plugins/amplify.ts", ssr: false }],
+  plugins: [{ src: "./src/plugins/amplify.js", ssr: false }],
   components: ["~/components", "~/components/custom"],
   ssr: false,
 });
