@@ -1,5 +1,11 @@
 <template>
   <div class="container mx-auto py-10">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold">Files Dashboard</h1>
+      <Button @click="logoutUser" variant="outline" size="icon">
+        <LogOutIcon class="h-5 w-5" />
+      </Button>
+    </div>
     <div class="flex justify-center items-center mt-6 gap-6">
       <Button
         @click="previousPage"
@@ -99,6 +105,7 @@
 const config = useRuntimeConfig();
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useAuth } from "@/stores/auth";
 
 import {
   formatDate,
@@ -144,6 +151,7 @@ interface FileItem {
   updatedAt: string;
 }
 
+const authStore = useAuth();
 const router = useRouter();
 const files = ref<FileItem[]>([]);
 
@@ -159,6 +167,7 @@ const pages = ref([]);
 const currentPage = ref(0);
 const isLoading = ref(false);
 const fileInput = ref(null);
+const userId = ref(authStore.userId);
 
 const triggerFileInput = () => {
   if (fileInput.value?.$el) {
@@ -216,6 +225,11 @@ const fetchFiles = async (reset = false, key = null) => {
 onMounted(() => {
   fetchFiles(true);
 });
+
+const logoutUser = () => {
+  authStore.logout();
+  router.push("/auth");
+};
 
 const filteredFiles = computed(() => {
   const statusFilters = {
