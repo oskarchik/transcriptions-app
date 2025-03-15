@@ -68,9 +68,6 @@ const password = ref("");
 const router = useRouter();
 
 const handleLogin = async () => {
-  console.log("trying to log in");
-  console.log("apiUrl config", config.public.baseApiUrl);
-
   const authStore = useAuth();
   await signOut();
   try {
@@ -87,7 +84,7 @@ const handleLogin = async () => {
       authStore.login(tokens.idToken?.toString(), userId);
       router.push("/dashboard");
     } else {
-      router.push("/auth");
+      router.push("/");
     }
   } catch (error) {
     console.error("Login error:", error);
