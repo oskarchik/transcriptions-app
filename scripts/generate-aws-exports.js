@@ -5,10 +5,11 @@ import path from "path";
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 // Asegúrate de que el directorio exista antes de escribir el archivo
-const dirPath = path.join(__dirname, "src", "aws");
+const dirPath = path.join(__dirname, "..", "src", "aws");
 if (!fs.existsSync(dirPath)) {
   fs.mkdirSync(dirPath, { recursive: true });
 }
+console.log("🚀 ~ dirPath:", dirPath);
 
 const awsConfig = {
   aws_project_region: process.env.NUXT_AWS_PROJECT_REGION,
