@@ -365,7 +365,7 @@ onMounted(() => {
 
 const logoutUser = () => {
   authStore.logout();
-  router.push("/auth");
+  router.push("/");
 };
 
 const filteredFiles = computed(() => {
