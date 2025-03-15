@@ -75,15 +75,13 @@ const handleLogin = async () => {
       username: email.value,
       password: password.value,
     });
-    console.log("🚀 ~ handleLogin ~ user:", user);
 
     if (user.isSignedIn) {
       const { userId } = await getCurrentUser();
-      console.log("🚀 ~ handleLogin ~ userId:", userId);
+
       const { tokens } = await fetchAuthSession();
-      console.log("tokens", tokens);
-      console.log("🚀 ~ handleLogin ~ tokens:", tokens);
-      authStore.login(tokens.idToken?.toString(), userId);
+
+      authStore.login(tokens.accessToken?.toString(), userId);
       router.push("/dashboard");
     } else {
       router.push("/");
