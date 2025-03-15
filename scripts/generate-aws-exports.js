@@ -9,7 +9,8 @@ const dirPath = path.join(__dirname, "..", "src", "aws");
 if (!fs.existsSync(dirPath)) {
   fs.mkdirSync(dirPath, { recursive: true });
 }
-console.log("🚀 ~ dirPath:", dirPath);
+console.log("🚀 ~ region:", process.env.NUXT_AWS_PROJECT_REGION);
+console.log("🚀 ~ poolId:", process.env.NUXT_AWS_USER_POOLS_ID);
 
 const awsConfig = {
   aws_project_region: process.env.NUXT_AWS_PROJECT_REGION,
