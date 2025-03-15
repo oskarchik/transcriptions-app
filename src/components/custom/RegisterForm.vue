@@ -105,7 +105,7 @@ const handleSubmit = async () => {
         confirmationCode: verificationCode.value,
       });
       if (nextStep.signUpStep === "DONE") {
-        router.push("/login"); // Redirige al login después de confirmar
+        router.push("/"); // Redirige al login después de confirmar
       }
     }
   } catch (error) {

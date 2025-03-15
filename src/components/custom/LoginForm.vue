@@ -79,8 +79,10 @@ const handleLogin = async () => {
 
     if (user.isSignedIn) {
       const { userId } = await getCurrentUser();
+      console.log("🚀 ~ handleLogin ~ userId:", userId);
       const { tokens } = await fetchAuthSession();
       console.log("tokens", tokens);
+      console.log("🚀 ~ handleLogin ~ tokens:", tokens);
       authStore.login(tokens.idToken?.toString(), userId);
       router.push("/dashboard");
     } else {
