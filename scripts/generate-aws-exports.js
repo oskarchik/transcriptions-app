@@ -23,7 +23,7 @@ const awsConfig = {
   aws_cognito_social_providers: [],
   aws_cognito_signup_attributes: ["EMAIL"],
   aws_cognito_mfa_configuration: "OFF",
-  aws_cognito_mfa_types: ["SMS"],
+  aws_cognito_mfa_types: [],
   aws_cognito_password_protection_settings: {
     passwordPolicyMinLength: 8,
     passwordPolicyCharacters: [],
@@ -33,11 +33,11 @@ const awsConfig = {
 
 fs.writeFileSync(
   path.join(dirPath, "aws-exports.js"),
-  `const awsmobile = ${JSON.stringify(
+  `const awsConfig = ${JSON.stringify(
     awsConfig,
     null,
     4
-  )};\nexport default awsmobile;`
+  )};\nexport default awsConfig;`
 );
 
 console.log("✅ aws-exports.js generado correctamente");
