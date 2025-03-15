@@ -1,4 +1,10 @@
 import fs from "fs";
+import path from "path";
+
+const dirPath = path.join(__dirname, "src", "aws");
+if (!fs.existsSync(dirPath)) {
+  fs.mkdirSync(dirPath, { recursive: true });
+}
 
 const awsConfig = {
   aws_project_region: process.env.NUXT_AWS_PROJECT_REGION,
@@ -20,11 +26,12 @@ const awsConfig = {
 };
 
 fs.writeFileSync(
-  "./src/aws/aws-exports.js",
+  path.join(dirPath, "aws-exports.js"),
   `const awsmobile = ${JSON.stringify(
     awsConfig,
     null,
     4
   )};\nexport default awsmobile;`
 );
+
 console.log("✅ aws-exports.js generado correctamente");
