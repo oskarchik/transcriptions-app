@@ -67,6 +67,7 @@ const password = ref("");
 const router = useRouter();
 
 const handleLogin = async () => {
+  console.log("trying to log in");
   const authStore = useAuth();
   await signOut();
   try {
@@ -74,10 +75,12 @@ const handleLogin = async () => {
       username: email.value,
       password: password.value,
     });
+    console.log("🚀 ~ handleLogin ~ user:", user);
 
     if (user.isSignedIn) {
       const { userId } = await getCurrentUser();
       const { tokens } = await fetchAuthSession();
+      console.log("tokens", tokens);
       authStore.login(tokens.idToken?.toString(), userId);
       router.push("/dashboard");
     } else {
