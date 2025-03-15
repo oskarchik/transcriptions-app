@@ -1,4 +1,4 @@
-const fs = require("fs");
+import fs from "fs";
 
 const awsConfig = {
   aws_project_region: process.env.NUXT_AWS_PROJECT_REGION,
