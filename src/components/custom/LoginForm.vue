@@ -68,6 +68,12 @@ const router = useRouter();
 
 const handleLogin = async () => {
   console.log("trying to log in");
+  console.log(process.env("process Nuxt ", process.env.NUXT_BASE_API_URL));
+  console.log(process.env("process base ", process.env.BASE_API_URL));
+  console.log(
+    process.env("process NUxt region ", process.env.NUXT_AWS_COGNITO_REGIONL)
+  );
+  console.log(process.env("process region ", process.env.AWS_COGNITO_REGION));
   const authStore = useAuth();
   await signOut();
   try {
