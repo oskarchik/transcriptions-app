@@ -45,7 +45,8 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+const config = useRuntimeConfig();
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import {
@@ -68,12 +69,17 @@ const router = useRouter();
 
 const handleLogin = async () => {
   console.log("trying to log in");
+  console.log("apiUrl config", config.public.baseApiUrl);
   console.log(process.env("process Nuxt ", process.env.NUXT_BASE_API_URL));
   console.log(process.env("process base ", process.env.BASE_API_URL));
   console.log(
-    process.env("process NUxt region ", process.env.NUXT_AWS_COGNITO_REGIONL)
+    process.env("process NUxt region ", process.env.NUXT_AWS_COGNITO_REGION)
   );
   console.log(process.env("process region ", process.env.AWS_COGNITO_REGION));
+  console.log(
+    process.env("process nuxt pool id ", process.env.NUXT_AWS_USER_POOLS_ID)
+  );
+  console.log(process.env("process poolid ", process.env.AWS_USER_POOLS_ID));
   const authStore = useAuth();
   await signOut();
   try {
