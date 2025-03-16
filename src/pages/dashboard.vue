@@ -286,9 +286,9 @@ const fetchFiles = async (reset = false, key = null) => {
   let url = `${BASE_API_URL}/transcriptions`;
 
   if (!reset && (key || lastEvaluatedKey.value)) {
-    url += `?lastEvaluatedKey=${encodeURIComponent(
-      key || lastEvaluatedKey.value
-    )}`;
+    const lastEvaluatedKeyString =
+      key || JSON.stringify(lastEvaluatedKey.value);
+    url += `?lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKeyString)}`;
   }
 
   const config = {
