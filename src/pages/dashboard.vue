@@ -240,7 +240,7 @@ const handleFileUpload = async () => {
 
   const [originalFilename, fileExtension] = fileName.split(".");
 
-  const url = `${BASE_API_URL}/signed-url?userId=${user}&filename=${fileName}&size=${size}&action=upload`;
+  const url = `${BASE_API_URL}/signed-url?userId=${user}&fileName=${fileName}&size=${size}&action=upload`;
   try {
     const response = await fetch(url, {
       method: "GET",
