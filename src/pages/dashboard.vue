@@ -287,7 +287,8 @@ const fetchFiles = async (reset = false, key = null) => {
 
   if (!reset && (key || lastEvaluatedKey.value)) {
     const lastEvaluatedKeyString =
-      key || JSON.stringify(lastEvaluatedKey.value);
+      JSON.stringify(key) || JSON.stringify(lastEvaluatedKey.value);
+
     url += `?lastEvaluatedKey=${encodeURIComponent(lastEvaluatedKeyString)}`;
   }
 
