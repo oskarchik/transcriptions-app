@@ -69,15 +69,18 @@
 <script lang="ts" setup>
 const config = useRuntimeConfig();
 
-import { ref } from "vue";
+import { ref, defineProps } from "vue";
 import { useRouter } from "vue-router";
 import { signUp, confirmSignUp } from "aws-amplify/auth";
 
-// Importa los componentes de ShadCN
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Form } from "@/components/ui/form";
+
+const { toggleForm } = defineProps<{
+  toggleForm: () => void;
+}>();
 
 const email = ref("");
 const password = ref("");
@@ -91,7 +94,6 @@ const handleSubmit = async () => {
 
   try {
     if (!isVerifying.value) {
-      // Registro de usuario
       const { user } = await signUp({
         username: email.value,
         password: password.value,
@@ -99,13 +101,12 @@ const handleSubmit = async () => {
       });
       isVerifying.value = true;
     } else {
-      // Confirmación de código
       const { nextStep } = await confirmSignUp({
         username: email.value,
         confirmationCode: verificationCode.value,
       });
       if (nextStep.signUpStep === "DONE") {
-        router.push("/"); // Redirige al login después de confirmar
+        toggleForm();
       }
     }
   } catch (error) {

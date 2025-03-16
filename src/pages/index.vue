@@ -3,7 +3,7 @@
     <div class="w-full max-w-md mx-auto p-6 bg-white rounded-md shadow-lg">
       <div class="flex flex-col justify-center">
         <!-- Condicionalmente renderizar el formulario de registro o inicio de sesión -->
-        <RegisterForm v-if="isRegistering" />
+        <RegisterForm v-if="isRegistering" :toggleForm="toggleForm" />
         <LoginForm v-else />
 
         <!-- Enlace para alternar entre el formulario de registro e inicio de sesión -->
