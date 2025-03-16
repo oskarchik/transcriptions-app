@@ -325,7 +325,7 @@ const fetchFiles = async (reset = false, key = null) => {
 };
 
 const handleFileDownload = async (fileId: string, user: string) => {
-  const url = `${BASE_API_URL}/signed-url?fileId=${fileId}&userId=${user}&action=downloads`;
+  const url = `${BASE_API_URL}/signed-url?fileId=${fileId}&userId=${user}&action=download`;
 
   const config = {
     method: "GET",
