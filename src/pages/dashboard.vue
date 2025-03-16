@@ -255,14 +255,13 @@ const handleFileUpload = async () => {
 
     const resBody = await response.json();
     const { signedUrl } = resBody;
-
+    console.log("filetipe ", file.types);
     const uploadResponse = await fetch(signedUrl, {
       method: "PUT",
       body: file,
       headers: {
         "Content-Type": file.type,
       },
-      credentials: "include",
     });
 
     if (!uploadResponse.ok) throw new Error("Failed to upload file");
