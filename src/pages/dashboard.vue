@@ -271,7 +271,7 @@ const handleFileUpload = async () => {
     selectedFile.value = null;
     fileInput.value.value = null;
 
-    fetchFiles();
+    window.location.reload();
   } catch (error) {
     console.error("Upload error:", error);
     alert("File upload failed.");
