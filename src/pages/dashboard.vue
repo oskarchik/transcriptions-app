@@ -240,7 +240,7 @@ const handleFileUpload = async () => {
 
   const [originalFilename, fileExtension] = fileName.split(".");
 
-  const url = `${BASE_API_URL}/audio/upload-url?userId=${user}&filename=${fileName}&size=${size}`;
+  const url = `${BASE_API_URL}/signed-url?userId=${user}&filename=${fileName}&size=${size}`;
   try {
     const response = await fetch(url, {
       method: "GET",
@@ -272,7 +272,6 @@ const handleFileUpload = async () => {
     selectedFile.value = null;
     fileInput.value.value = null;
 
-    // Actualizar lista de archivos
     fetchFiles();
   } catch (error) {
     console.error("Upload error:", error);
@@ -327,7 +326,7 @@ const fetchFiles = async (reset = false, key = null) => {
 };
 
 const handleFileDownload = async (fileId: string, user: string) => {
-  const url = `${BASE_API_URL}download-url?fileId=${fileId}&userId=${user}`;
+  const url = `${BASE_API_URL}/signed-url?fileId=${fileId}&userId=${user}`;
 
   const config = {
     method: "GET",
