@@ -248,6 +248,7 @@ const handleFileUpload = async () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
+      credentials: "include",
     });
 
     if (!response.ok) throw new Error("Failed to get upload URL");
@@ -261,6 +262,7 @@ const handleFileUpload = async () => {
       headers: {
         "Content-Type": file.type,
       },
+      credentials: "include",
     });
 
     if (!uploadResponse.ok) throw new Error("Failed to upload file");
